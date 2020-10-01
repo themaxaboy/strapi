@@ -1,6 +1,7 @@
 services:
   - postgresql
   - mysql
+  - mongodb
 
 addons:
   postgresql: '11.2'
@@ -81,8 +82,9 @@ mongo_test: &mongo_test
     - mkdir -p ./data/db/27017
     - mkdir -p ./data/db/27000
     - ./mongodb-linux-x86_64-3.6.6/bin/mongod --fork --dbpath ./data/db/27017 --syslog --port 27017
+    - mongo --eval 'db.createUser({user:"strapi",pwd:"test",roles:["readWrite"]});'
   env:
-    - DB_STRING='--dbclient=mongo --dbhost=localhost --dbport=27017 --dbname=strapi_test --dbusername= --dbpassword='
+    - DB_STRING='--dbclient=mongo --dbhost=localhost --dbport=27017 --dbname=strapi_test --dbusername=strapi --dbpassword=test'
 
 before_script:
   - yarn build
